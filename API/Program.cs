@@ -11,8 +11,15 @@ builder.Services.AddDbContext<StoreContext>(opt =>
 {
   opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+// type of the lifetime of the service
+
+// builder.Services.AddSingleton - od pokretanja aplikacije do njenog gasenja
+// builder.Services.AddScoped - duzina HTTP request-a
+// builder.Services.AddTransient - duzina trajanja metode
+
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
 var app = builder.Build();
 
