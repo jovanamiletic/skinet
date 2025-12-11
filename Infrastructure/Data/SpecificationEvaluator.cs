@@ -1,5 +1,3 @@
-using System;
-using System.Buffers.Text;
 using Core.Entities;
 using Core.Interfaces;
 
@@ -16,12 +14,12 @@ public class SpecificationEvaluator<T> where T : BaseEntity
 
     if (spec.OrderBy != null)
     {
-      query = query.OrderBy(spec.OrderBy);
+      query = query.OrderBy(spec.OrderBy); // x => x.Price; x => x.Name
     }
 
     if (spec.OrderByDescending != null)
     {
-      query = query.OrderByDescending(spec.OrderByDescending);
+      query = query.OrderByDescending(spec.OrderByDescending); // x => x.Price; x => x.Name
     }
 
     if (spec.IsDistinct)
@@ -37,7 +35,7 @@ public class SpecificationEvaluator<T> where T : BaseEntity
     return query;
   }
 
-  public static IQueryable<TResult> GetQuery<TSpec, TResult>(IQueryable<T> query, ISpecification<T, TResult> spec)
+  public static IQueryable<TResult> GetQuery<TSpec, TResult>(IQueryable<T> query, ISpecification<T, TResult> spec) //projection
   {
     if (spec.Criteria != null)
     {

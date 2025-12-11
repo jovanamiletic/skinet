@@ -34,10 +34,10 @@ app.MapControllers();
 
 try
 {
-  using var scope = app.Services.CreateScope();
+  using var scope = app.Services.CreateScope(); // using garantuje da će se scope (i DbContext) pravilno dispose-ovati
   var services = scope.ServiceProvider;
-  var context = services.GetRequiredService<StoreContext>();
-  await context.Database.MigrateAsync();
+  var context = services.GetRequiredService<StoreContext>(); // DI pravi instancu StoreContext
+  await context.Database.MigrateAsync(); // da li baza postoji -> ako ne, kreira je; proverava koje migracije su vec primenjene, a onda primenjuje sve one koje fale
   await StoreContextSeed.SeedAsync(context);
 }
 catch (Exception ex)

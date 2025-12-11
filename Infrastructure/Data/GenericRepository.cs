@@ -10,7 +10,7 @@ public class GenericRepository<T>(StoreContext context) : IGenericRepository<T> 
 {
   public void Add(T entity)
   {
-    context.Set<T>().Add(entity);
+    context.Set<T>().Add(entity); // context.Set<Product>() <==> isto što i context.Products; Add ne upisuje odmah u bazu, nego EF Core pocinje da prati(track-uje) objekat
   }
 
   public async Task<int> CountAsync(ISpecification<T> spec)
@@ -69,8 +69,8 @@ public class GenericRepository<T>(StoreContext context) : IGenericRepository<T> 
 
   public void Update(T entity)
   {
-    context.Set<T>().Attach(entity);
-    context.Entry(entity).State = EntityState.Modified;
+    context.Set<T>().Attach(entity); //EF Core počinje da prati entitet; NE pravi nikakav INSERT ili UPDATE sada; tretira entitet kao postojeći u bazi
+    context.Entry(entity).State = EntityState.Modified; // EF Core će napraviti SQL UPDATE; U update-u će biti sva polja, ne samo izmenjena
   }
 
   private IQueryable<T> ApplySpecification(ISpecification<T> spec)
