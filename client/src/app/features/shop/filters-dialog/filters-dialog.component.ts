@@ -10,18 +10,20 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './filters-dialog.component.html',
   styleUrl: './filters-dialog.component.scss',
 })
-export class FiltersDialogComponent {
-  private dialogRef = inject(MatDialogRef<FiltersDialogComponent>);
-  data = inject(MAT_DIALOG_DATA);
-  shopService = inject(ShopService);
+export class FiltersDialogComponent {//Ovaj child nije u HTML-u parenta, već je “dinamički”.
+  private dialogRef = inject(MatDialogRef<FiltersDialogComponent>); //daje ti kontrolu nad otvorenim dialogom(mozes da ga zatvoris;mozes da vratis podatke parent-u)
+  parentData = inject(MAT_DIALOG_DATA); //podaci koje je parent poslao prilikom otvaranja dialoga
+  shopService = inject(ShopService); //dialog direktno koristi servis da dobije listu svih tipova i brendova
 
-  selectedBrands: string[] = this.data.selectedBrands;
-  selectedTypes: string[] = this.data.selectedTypes;
+  //lokalni STATE dialoga (ovo ne menja odmah STATE parent-a; parent se menja tek kad se dialog zatvori)
+  //referenca na parent state (menja se odmah dok je dialog otvoren)
+  newSelectedBrands: string[] = this.parentData.selectedBrands;
+  newSelectedTypes: string[] = this.parentData.selectedTypes;
 
-  applyFilters() {
-    this.dialogRef.close({
-      selectedBrands: this.selectedBrands,
-      selectedTypes: this.selectedTypes
-    });
+  applyFilters() {//poziva se kad korisnik klikne apply
+    this.dialogRef.close({ //close() salje objekat parent komponenti
+      selectedBrands: this.newSelectedBrands,
+      selectedTypes: this.newSelectedTypes
+    }); 
   }
 }

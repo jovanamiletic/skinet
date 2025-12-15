@@ -1,3 +1,4 @@
+<!-- prikazi sadrzaj samo ako product postoji; ako je undefined ili null, nista se ne renderuje -->
 @if (product) {
 <mat-card appearance="raised">
   <img src="{{ product.pictureUrl }}" class="rounded-t-lg" alt="image of {{ product.name }}" />

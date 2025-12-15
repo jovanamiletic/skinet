@@ -19,6 +19,6 @@ import { MatButton } from '@angular/material/button';
   templateUrl: './product-item.component.html',
   styleUrl: './product-item.component.scss',
 })
-export class ProductItemComponent {
+export class ProductItemComponent { // CHILD komponenta od ShopComponent
   @Input() product?: Product;
 }

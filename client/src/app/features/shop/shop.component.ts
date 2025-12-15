@@ -24,7 +24,7 @@ import { FormsModule } from '@angular/forms';
     MatListOption,
     MatMenuTrigger,
     MatPaginator,
-    FormsModule
+    FormsModule //ngModel
   ],
   templateUrl: './shop.component.html',
   styleUrl: './shop.component.scss',
@@ -32,28 +32,28 @@ import { FormsModule } from '@angular/forms';
 export class ShopComponent implements OnInit {
   private shopService = inject(ShopService);
   private dialogService = inject(MatDialog);
-  products?: Pagination<Product>;
+  products?: Pagination<Product>; //na početku može biti undefined (dok se API ne vrati) - STATE(koji proizvodi su trenutno prikazani)
   sortOptions = [
-    { name: 'Alphabetical', value: 'name' },
+    { name: 'Alphabetical', value: 'name' }, // value se salje backend-u kao query parametar sort
     { name: 'Price: Low-High', value: 'priceAsc' },
     { name: 'Price: High-Low', value: 'priceDesc' },
   ];
-  shopParams = new ShopParams();
+  shopParams = new ShopParams(); // STATE (trenutni filteri,sort,search,page)
   pageSizeOptions = [5, 10, 15, 20];
-  pageEvent?: PageEvent;
+  pageEvent?: PageEvent; // STATE(trenutna paginacija)
 
-  ngOnInit() {
-    this.initialiseShop();
+  ngOnInit() { //poziva se jednom -> kada se komponenta kreira. Idealno mesto da “napuniš ekran”.
+    this.initializeShop();
   }
 
-  initialiseShop() {
+  initializeShop() {
     this.shopService.getTypes();
     this.shopService.getBrands();
     this.getProducts();
   }
 
   onSearchChange() {
-    this.shopParams.pageNumber = 1;
+    this.shopParams.pageNumber = 1; //resetuješ stranu na 1 (logično: nova pretraga počinje od prve strane)
     this.shopService.getProducts(this.shopParams).subscribe({
       next: response => this.products = response,
       error: error => console.error(error)
@@ -61,7 +61,7 @@ export class ShopComponent implements OnInit {
   }
 
   getProducts() {
-    this.shopService.getProducts(this.shopParams).subscribe({
+    this.shopService.getProducts(this.shopParams).subscribe({ //servis vraca Observable, a odavde se subscribe-ujes(DOBAR PATTERN)
       next: response => this.products = response,
       error: error => console.error(error)
     })
@@ -87,6 +87,7 @@ export class ShopComponent implements OnInit {
     dialogRef.afterClosed().subscribe({
       next: result => {
         if (result) {
+          // console.log(result);
           this.shopParams.pageNumber = 1;
           this.shopParams.types = result.selectedTypes;
           this.shopParams.brands = result.selectedBrands;
@@ -96,7 +97,7 @@ export class ShopComponent implements OnInit {
     });
   }
 
-  handlePageEvent(event: PageEvent) {
+  handlePageEvent(event: PageEvent) { // pozove se svaki put kad korisnik klikne Next/Previous ili kad izabere drugu velicinu strane(5,10,20)
     this.shopParams.pageNumber = event.pageIndex + 1;
     this.shopParams.pageSize = event.pageSize;
     this.getProducts();

@@ -34,10 +34,12 @@
     </form>
 
     <div class="flex gap-3">
+      <!-- event binding -->
       <button class="match-input-height" mat-stroked-button (click)="openFiltersDialog()">
         <mat-icon>filter_list</mat-icon>
         Filters
       </button>
+      <!-- property binding (prosledi sortMenu ovoj direktivi kao Input) -->
       <button class="match-input-height" mat-stroked-button [matMenuTriggerFor]="sortMenu">
         <mat-icon>swap_vert</mat-icon>
         Sort
@@ -47,6 +49,8 @@
 
   <div class="grid grid-cols-5 gap-4">
     @for (product of products?.data; track product.id) {
+    <!-- kako se krecu podaci Parent -> Child (preko @Input) -->
+    <!-- <child [data]="value"></child> -->
     <app-product-item [product]="product"></app-product-item>
     }
   </div>
