@@ -7,7 +7,7 @@ namespace API.Controllers;
 public class CartController(ICartService cartService) : BaseApiController
 {
   [HttpGet]
-  public async Task<ActionResult<ShoppingCart>> GetCartById(string id)
+  public async Task<ActionResult<ShoppingCart>> GetCartById(string id) // GET /api/cart?id=cart1
   {
     var cart = await cartService.GetCartAsync(id);
 
@@ -15,7 +15,7 @@ public class CartController(ICartService cartService) : BaseApiController
   }
 
   [HttpPost]
-  public async Task<ActionResult<ShoppingCart>> UpdateCart(ShoppingCart cart)
+  public async Task<ActionResult<ShoppingCart>> UpdateCart(ShoppingCart cart) // POST /api/cart
   {
     var updatedCart = await cartService.SetCartAsync(cart);
 

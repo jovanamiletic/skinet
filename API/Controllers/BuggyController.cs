@@ -10,31 +10,31 @@ namespace API.Controllers;
 public class BuggyController : BaseApiController
 {
   [HttpGet("unauthorized")]
-  public IActionResult GetUnauthorized()
+  public IActionResult GetUnauthorized() //401 Unauthorized → nisi ulogovana / nema tokena
   {
     return Unauthorized();
   }
 
   [HttpGet("badrequest")]
-  public IActionResult GetBadRequest()
+  public IActionResult GetBadRequest() //400 Bad Request → nešto nije u redu sa zahtevom (validacija, loš format)
   {
     return BadRequest("Not a good request");
   }
 
   [HttpGet("notfound")]
-  public IActionResult GetNotFound()
+  public IActionResult GetNotFound() //404 Not Found → traženi resurs ne postoji
   {
     return NotFound();
   }
 
   [HttpGet("internalerror")]
-  public IActionResult GetInternalError()
+  public IActionResult GetInternalError() //500 Internal Server Error → puklo je nešto na serveru
   {
     throw new Exception("This is a test exception");
   }
 
   [HttpPost("validationerror")]
-  public IActionResult GetValidationError(CreateProductDto product)
+  public IActionResult GetValidationError(CreateProductDto product) //(400 Validation error kao poseban slučaj 400 gde dobijaš listu grešaka po poljima)
   {
     return Ok();
   }

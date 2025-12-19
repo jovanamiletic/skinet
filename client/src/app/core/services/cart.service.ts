@@ -9,13 +9,15 @@ import { map } from 'rxjs';
   providedIn: 'root'
 })
 export class CartService {
-  baseUrl = environment.baseUrl;
+  baseUrl = environment.baseUrl; // api/
   private http = inject(HttpClient)
-  cart = signal<Cart | null>(null);
-  itemCount = computed(() => {
+  cart = signal<Cart | null>(null); // signal ima trenutnu vrednost i listu "pretplatnika" (komponente koje ga koriste)
+  
+  itemCount = computed(() => { //azurira matBadge(broj proizvoda u korpi u header-u)
     return this.cart()?.items.reduce((sum, item) => sum + item.quantity, 0);
   });
-    totals = computed(()=> {
+  
+  totals = computed(()=> { //azurira cenu u checkout-u
     const cart = this.cart();
     if (!cart) return null;
     const subtotal = cart.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -24,27 +26,29 @@ export class CartService {
     return {
       subtotal,
       shipping: 0,
-      discount: 0,
+      discount: 0, 
       total: subtotal + shipping - discount
     };
-  })
+  });
 
   getCart(id: string) {
-    return this.http.get<Cart>(this.baseUrl + 'cart?id=' + id).pipe(
+    return this.http.get<Cart>(this.baseUrl + 'cart?id=' + id).pipe( //pipe omogucava da uradim nesto sa Observable obj i i dalje vratim Observable
       map(cart => {
-        this.cart.set(cart);
+        // this.cart nije Cart, this.cart je signal koji DRŽI Cart
+        // kad pozoves .set() -> vrednost se promeni, a Angular obavesti sve koji ga koriste -> UI se ponovo renderuje gde treba
+        this.cart.set(cart); 
         return cart;
       })
     )
   }
 
   setCart(cart: Cart) {
-    return this.http.post<Cart>(this.baseUrl + 'cart', cart).subscribe({
-      next: cart => this.cart.set(cart)
+    return this.http.post<Cart>(this.baseUrl + 'cart', cart).subscribe({ // Angular salje POST /api/cart
+      next: cart => this.cart.set(cart) //cart je ovde odgovor sa servera(nije isti objekat koji sam poslala)
     })
   }
 
-  addItemToCart(item: CartItem | Product, quantity = 1) {
+  addItemToCart(item: CartItem | Product, quantity = 1) {//quantity-koliko komada zelim da dodam
     const cart = this.cart() ?? this.createCart();
     if (this.isProduct(item)) {
       item = this.mapProductToCartItem(item);
@@ -57,16 +61,16 @@ export class CartService {
     const cart = this.cart();
     if (!cart) return;
     const index = cart.items.findIndex(i => i.productId === productId);
-    if (index !== -1) {
+    if (index !== -1) {//imamo vec proizvod u korpi
       if (cart.items[index].quantity > quantity) {
         cart.items[index].quantity -= quantity;
       } else {
-        cart.items.splice(index, 1);
+        cart.items.splice(index, 1); //splice menja originalni niz(pocni od el sa prosledjenim indexom, i obrisi 1 el.pocevsi od tog)
       }
       if (cart.items.length === 0) {
-        this.deleteCart();
+        this.deleteCart();//brise element iz korpe u Redis-u
       } else {
-        this.setCart(cart);
+        this.setCart(cart);//azurira korpu u Redis-u
       }
     }
   }
@@ -80,7 +84,7 @@ export class CartService {
     });
   }
 
-  private addOrUpdateItem(items: CartItem[], item: CartItem, quantity: number) {
+  private addOrUpdateItem(items: CartItem[], item: CartItem, quantity: number): CartItem[] {
     const index = items.findIndex(i => i.productId === item.productId);
     if (index === -1) {
       item.quantity = quantity;
@@ -103,11 +107,13 @@ export class CartService {
     };
   }
 
-  private isProduct(item: CartItem | Product): item is Product {
+  //union - item: CartItem | Product
+  //type guard - funkcija čiji povratni tip ima oblik: paramName is SomeType
+  private isProduct(item: CartItem | Product): item is Product { // item is Product (type guard - ako ova f-ja vrati true, TS zakljucuje da je item tipa Product)
     return (item as Product).id !== undefined;
   }
 
-  private createCart() {
+  private createCart() : Cart {
     const cart = new Cart();
     localStorage.setItem('cart_id', cart.id);
     return cart;

@@ -1,6 +1,6 @@
 namespace Core.Entities;
 
-public class CartItem
+public class CartItem // nije EF entitet(ne nasledjuje BaseEntity)
 {
   public int ProductId { get; set; }
   public required string ProductName { get; set; }

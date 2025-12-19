@@ -15,7 +15,7 @@ public class ProductsController(IGenericRepository<Product> repo) : BaseApiContr
     return await CreatePagedResult(repo, spec, specParams.PageIndex, specParams.PageSize);
   }
 
-  [HttpGet("{id:int}")] //api/products/2
+  [HttpGet("{id:int}")] // GET /api/products/12 
   public async Task<ActionResult<Product>> GetProduct(int id)
   {
     var product = await repo.GetByIdAsync(id);

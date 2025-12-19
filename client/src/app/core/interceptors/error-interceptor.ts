@@ -4,11 +4,12 @@ import { NavigationExtras, Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 import { SnackbarService } from '../services/snackbar.service';
 
+// Interceptor je “centralna kontrolna tačka”: svaki HTTP error dobija standardno ponašanje, bez ponavljanja koda po komponentama.
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
   const snackbar = inject(SnackbarService);
 
-  return next(req).pipe(
+  return next(req).pipe( // pipe služi da “provuče” Observable kroz niz operatora koji ga menjaju (pre nego sto stigne do subscribe())
     catchError((err: HttpErrorResponse) => {
       if (err.status === 400) {
         if (err.error.errors) {

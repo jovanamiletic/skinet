@@ -31,20 +31,19 @@ export class ProductDetailsComponent implements OnInit {
   private shopService = inject(ShopService);
   private cartService = inject(CartService);
   private activatedRoute = inject(ActivatedRoute);
-  product?: Product;
+  product?: Product; // rezultat koji backend vraca
   quantityInCart = 0;
   quantity = 1;
-
 
   ngOnInit() {
     this.loadProduct();
   }
 
-  loadProduct() {
-    const id = this.activatedRoute.snapshot.paramMap.get('id');
+  loadProduct() { //Cilj metode: učitati jedan proizvod na osnovu ID-ja iz URL-a
+    const id = this.activatedRoute.snapshot.paramMap.get('id'); // ako imas URL: /shop/12  =>  id === "12" (uvek string!)
     if (!id) return;
-    this.shopService.getProduct(+id).subscribe({
-      next: product => {
+    this.shopService.getProduct(+id).subscribe({ // id je string ("12"); +id ga pretvara u broj → 12
+      next: product => { // product je rezultat koji backend vraca
         this.product = product
         this.updateQuantityInBasket();
       },
@@ -55,7 +54,7 @@ export class ProductDetailsComponent implements OnInit {
   updateCart() {
     if (!this.product) return;
     if (this.quantity > this.quantityInCart) {
-      const itemsToAdd = this.quantity - this.quantityInCart;
+      const itemsToAdd = this.quantity - this.quantityInCart; // quantity - br u input polju; quantityInCart - broj u korpi
       this.quantityInCart += itemsToAdd;
       this.cartService.addItemToCart(this.product, itemsToAdd);
     } else {

@@ -13,19 +13,19 @@ export class ShopService {
   types: string[] = [];
   brands: string[] = [];//kesirani podaci-pamte se jednom ucitani Types i Brands
 
-  getProduct(id: number){
-    return this.http.get<Product>(this.baseUrl + 'products/' + id);
+  getProduct(id: number){ 
+    return this.http.get<Product>(this.baseUrl + 'products/' + id); // GET https://localhost:5001/api/products/12 
   }
 
   getProducts(shopParams: ShopParams) {
     let params = new HttpParams();
     //filtriranje
     if (shopParams.brands.length > 0) {
-      params = params.append('brands', shopParams.brands.join(','));// https://localhost:5001/api/products/Angular,React
+      params = params.append('brands', shopParams.brands.join(','));// https://localhost:5001/api/products?brandsAngular,React
     }
 
     if (shopParams.types.length > 0) {
-      params = params.append('types', shopParams.types.join(','));// https://localhost:5001/api/products?type=boards
+      params = params.append('types', shopParams.types.join(','));// https://localhost:5001/api/products?types=boards
     }
     //sortiranje
     if (shopParams.sort) {

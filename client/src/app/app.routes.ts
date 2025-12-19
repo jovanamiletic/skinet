@@ -9,14 +9,14 @@ import { CartComponent } from './features/cart/cart.component';
 import { CheckoutComponent } from './features/checkout/checkout.component';
 
 export const routes: Routes = [
-  {path: '', component: HomeComponent},
-  {path: 'shop', component: ShopComponent},
-  {path: 'shop/:id', component: ProductDetailsComponent},
-  {path:'cart', component: CartComponent},
-  {path:'checkout', component: CheckoutComponent},
-  {path: 'test-error', component: TestErrorComponent},
-  {path:'not-found', component:NotFoundComponent},
-  {path:'server-error', component: ServerErrorComponent},
-  {path: '**', redirectTo: 'not-found', pathMatch: 'full'},
+  {path: '', component: HomeComponent}, // /
+  {path: 'shop', component: ShopComponent}, // /shop
+  {path: 'shop/:id', component: ProductDetailsComponent},// /shop/:id
+  {path:'cart', component: CartComponent},// /cart
+  {path:'checkout', component: CheckoutComponent},// /checkout
+  {path: 'test-error', component: TestErrorComponent},// /test-error DEBUG-ONLY ruta(ne ide u produkciju)
+  {path:'not-found', component:NotFoundComponent},// /not-found
+  {path:'server-error', component: ServerErrorComponent},// /server-error
+  {path: '**', redirectTo: 'not-found', pathMatch: 'full'},// WILDCARD ruta (bilo koja ruta koja nije navedena gore bice preusmerena na not-found)
 ];
  

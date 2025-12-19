@@ -19,7 +19,7 @@ import { MatButton } from '@angular/material/button';
 })
 export class CartItemComponent {
   cartService = inject(CartService);
-  item = input.required<CartItem>();
+  item = input.required<CartItem>(); //(ovo je SIGNAL) ne mozemo da koristimo CartItem u Parent komponenti(cart.component) ukoliko ne prosledimo item
 
   incrementQuantity() {
     this.cartService.addItemToCart(this.item());

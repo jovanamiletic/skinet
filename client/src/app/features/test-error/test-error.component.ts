@@ -10,13 +10,13 @@ import { MatButton } from '@angular/material/button';
   templateUrl: './test-error.component.html',
   styleUrl: './test-error.component.scss',
 })
-export class TestErrorComponent {
+export class TestErrorComponent { // kako frontend hvata backend greske
   private http = inject(HttpClient);
   baseUrl = 'https://localhost:5001/api/';
-  validationErrors?: string[];
+  validationErrors?: string[]; // čuva greške validacije (400)
 
   get404Error() {
-    this.http.get(this.baseUrl + 'buggy/notfound').subscribe({
+    this.http.get(this.baseUrl + 'buggy/notfound').subscribe({ //GET https://localhost:5001/api/buggy/notfound
       next: response => console.log(response),
       error: error => console.log(error)
     });
@@ -30,9 +30,9 @@ export class TestErrorComponent {
   }
 
   get500Error() {
-    this.http.get(this.baseUrl + 'buggy/internalerror').subscribe({
+    this.http.get(this.baseUrl + 'buggy/internalerror').subscribe({ //GET https://localhost:5001/api/buggy/internalerror
       next: response => console.log(response),
-      error: error => console.log(error)
+      error: error => console.log(error)//
     });
   }
 
