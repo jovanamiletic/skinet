@@ -8,6 +8,8 @@ namespace API.Extensions;
 
 public static class ClaimsPrincipleExtensions
 {
+  // UserManager<AppUser>-servis za rad sa korisnicima u bazi (deo ASP.NET Identity sistema) -> kreiranje usera,pronalaženje usera,promenu lozinke,dodavanje role-a
+  // ClaimsPrincipal-identitet user-a (autentifikovani user)
   public static async Task<AppUser> GetUserByEmail(this UserManager<AppUser> userManager, ClaimsPrincipal user)
   {
     var userToReturn = await userManager.Users.FirstOrDefaultAsync(x =>

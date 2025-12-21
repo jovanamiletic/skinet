@@ -14,7 +14,7 @@ export class InitService {
     const cartId = localStorage.getItem('cart_id');
     const cart$ = cartId ? this.cartService.getCart(cartId) : of(null);
 
-    return forkJoin({
+    return forkJoin({ //čekaj da se SVI requestovi završe, pa tek onda nastavi
       cart: cart$,
       user: this.accountService.getUserInfo()
     })

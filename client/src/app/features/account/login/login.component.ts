@@ -25,9 +25,9 @@ export class LoginComponent {
     if (url) this.returnUrl = url;
   }
 
-  loginForm = this.fb.group({
-    email: [''],
-    password: ['']
+  loginForm = this.fb.group({ //formGroup
+    email: [''], //formControl
+    password: [''] //formControl
   })
 
   onSubmit() {

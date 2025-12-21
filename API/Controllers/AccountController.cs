@@ -39,12 +39,12 @@ public class AccountController(SignInManager<AppUser> signInManager) : BaseApiCo
   [HttpPost("logout")]
   public async Task<ActionResult> Logout()
   {
-    await signInManager.SignOutAsync();
+    await signInManager.SignOutAsync(); //SignOutAsync() briše auth cookie na serveru
     return NoContent();
   }
 
   [HttpGet("user-info")]
-  public async Task<ActionResult> GetUserInfo()
+  public async Task<ActionResult> GetUserInfo() // jedini nacin da Angular dobije User podatke 
   {
     if (User.Identity?.IsAuthenticated == false) return NoContent();
 

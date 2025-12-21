@@ -12,17 +12,19 @@ export class AccountService {
   private http = inject(HttpClient);
   currentUser = signal<User | null>(null);
 
-  login(values: any) {
+  login(values: any) { //Pošalji login podatke backend-u i ako je sve OK, vrati mi ulogovanog korisnika i postavi cookie.
     let params = new HttpParams();
     params = params.append('useCookies', true);
-    return this.http.post<User>(this.baseUrl + 'login', values, { params});
+    return this.http.post<User>(this.baseUrl + 'login', values, { params}); //POST api/account/login?useCookies=true
   }
-
+ 
   register(values: any) {
     return this.http.post<User>(this.baseUrl + 'account/register', values);
   }
 
-  getUserInfo() {
+  //Angular: "Hej API, imam cookie, ko sam ja?"
+  //API:     "Evo tvoj user objekat"  (ako je cookie validan)
+  getUserInfo() { //jedini način da frontend zna da li je user ulogovan jeste da pita backend
     return this.http.get<User>(this.baseUrl + 'account/user-info').pipe(
         map(user => {
           this.currentUser.set(user);

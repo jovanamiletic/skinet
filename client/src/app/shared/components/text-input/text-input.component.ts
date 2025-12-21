@@ -15,12 +15,13 @@ import { MatInput } from '@angular/material/input';
   templateUrl: './text-input.component.html',
   styleUrl: './text-input.component.scss'
 })
+// ControlValueAccessor = MOST između Angular formi i moje custom komponente
 export class TextInputComponent {
     @Input() label = '';
     @Input() type = 'text';
 
-    constructor(@Self() public controlDir: NgControl) {
-      this.controlDir.valueAccessor = this;
+    constructor(@Self() public controlDir: NgControl) { // jedan input = jedan FormControl(@Self)
+      this.controlDir.valueAccessor = this; //“Ova komponenta (TextInputComponent) je TA koja zna kako se čita i piše vrednost.”
     }
 
     writeValue(obj: any): void {
@@ -33,6 +34,6 @@ export class TextInputComponent {
     }
 
     get control() {
-      return this.controlDir.control as FormControl;
+      return this.controlDir.control as FormControl; //omogucava da imam control.errors, control.touched, control.invalid
     }
 }

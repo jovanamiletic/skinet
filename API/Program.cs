@@ -45,7 +45,7 @@ app.UseMiddleware<ExceptionMiddleware>();
 app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:4200", "https://localhost:4200"));
 
 app.MapControllers();
-app.MapGroup("api").MapIdentityApi<AppUser>(); //api/login
+app.MapGroup("api").MapIdentityApi<AppUser>(); //Microsoft-ovi default endpointi (/login, /register, …) sada dobiju prefiks /api => POST /api/login
 
 try
 {

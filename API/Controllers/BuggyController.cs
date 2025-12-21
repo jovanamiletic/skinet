@@ -39,11 +39,11 @@ public class BuggyController : BaseApiController
     return Ok();
   }
 
-  [Authorize]
+  [Authorize] //ako request nema validan auth cookie (ili token) → API vraća 401 Unauthorized
   [HttpGet("secret")]
   public IActionResult GetSecret()
   {
-    var name = User.FindFirst(ClaimTypes.Name)?.Value;
+    var name = User.FindFirst(ClaimTypes.Name)?.Value; //User u kontroleru dolazi iz cookie-ja i nosi claims
     var id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
     return Ok("Hello " + name + " with the id of " + id);
