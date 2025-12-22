@@ -4,4 +4,7 @@ public class ShoppingCart //nije EF entitet, kao ni CartItem(ne nasledjuju Base 
 {
   public required string Id { get; set; } //Ovo nije database-generated ID
   public List<CartItem> Items { get; set; } = [];
+  public int? DeliveryMethodId { get; set; }
+  public string? ClientSecret { get; set; }
+  public string? PaymentIntentId { get; set; }
 }
