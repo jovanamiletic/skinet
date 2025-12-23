@@ -62,11 +62,6 @@ public class GenericRepository<T>(StoreContext context) : IGenericRepository<T> 
     context.Set<T>().Remove(entity);
   }
 
-  public async Task<bool> SaveAllAsync()
-  {
-    return await context.SaveChangesAsync() > 0;
-  }
-
   public void Update(T entity)
   {
     context.Set<T>().Attach(entity); //EF Core počinje da prati entitet; NE pravi nikakav INSERT ili UPDATE sada; tretira entitet kao postojeći u bazi
