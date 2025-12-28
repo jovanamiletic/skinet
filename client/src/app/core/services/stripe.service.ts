@@ -23,7 +23,7 @@ export class StripeService {
 
   constructor() {
     this.stripePromise = loadStripe(environment.stripePublicKey);
-  }
+   }
 
   getStripeInstance(): Promise<Stripe | null> {
     return this.stripePromise;

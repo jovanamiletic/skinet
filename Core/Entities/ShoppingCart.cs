@@ -6,5 +6,5 @@ public class ShoppingCart //nije EF entitet, kao ni CartItem(ne nasledjuju Base 
   public List<CartItem> Items { get; set; } = [];
   public int? DeliveryMethodId { get; set; }
   public string? ClientSecret { get; set; }
-  public string? PaymentIntentId { get; set; }
+  public string? PaymentIntentId { get; set; }//ako ne postoji onda kreiram novi PaymentIntent; ako postoji onda ga azuriram(u PaymentService-u)
 }

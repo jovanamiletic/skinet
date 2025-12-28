@@ -7,7 +7,7 @@ namespace API.DTOs;
 public class CreateOrderDto
 {
   [Required]
-  public string CartId { get; set; } = string.Empty;
+  public string CartId { get; set; } = string.Empty; //iz koje korpe pravimo order
 
   [Required]
   public int DeliveryMethodId { get; set; }
@@ -16,5 +16,5 @@ public class CreateOrderDto
   public ShippingAddress ShippingAddress { get; set; } = null!;
 
   [Required]
-  public PaymentSummary PaymentSummary { get; set; } = null!;
+  public PaymentSummary PaymentSummary { get; set; } = null!; //info o kartici
 }

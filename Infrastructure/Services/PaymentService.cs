@@ -39,7 +39,7 @@ public class PaymentService(IConfiguration config, ICartService cartService, IUn
       }
     }
 
-    var service = new PaymentIntentService();
+    var service = new PaymentIntentService(); // promenljiva za Stripe
 
     PaymentIntent? intent = null;
 

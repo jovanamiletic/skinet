@@ -39,6 +39,15 @@ public class BaseSpecification<T>(Expression<Func<T, bool>>? criteria) : ISpecif
 
   public List<Expression<Func<T, object>>> Includes { get; } = [];
   public List<string> IncludeStrings { get; } = []; // For ThenInclude
+  protected void AddInclude(Expression<Func<T, object>> includeExpression)
+  {
+    Includes.Add(includeExpression);
+  }
+
+  protected void AddInclude(string includeString)
+  {
+    IncludeStrings.Add(includeString); // For ThenInclude
+  }
 
   protected void ApplyPaging(int skip, int take)
   {
@@ -55,15 +64,6 @@ public class BaseSpecification<T>(Expression<Func<T, bool>>? criteria) : ISpecif
     return query;
   }
 
-  protected void AddInclude(Expression<Func<T, object>> includeExpression)
-  {
-    Includes.Add(includeExpression);
-  }
-
-  protected void AddInclude(string includeString)
-  {
-    IncludeStrings.Add(includeString); // For ThenInclude
-  }
 }
 
 public class BaseSpecification<T, TResult>(Expression<Func<T, bool>>? criteria)

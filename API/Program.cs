@@ -5,6 +5,7 @@ using Infrastructure.Data;
 using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
+using API.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +39,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddIdentityApiEndpoints<AppUser>()
     .AddEntityFrameworkStores<StoreContext>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -46,8 +48,13 @@ app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:4200", "https://localhost:4200"));
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapControllers();
 app.MapGroup("api").MapIdentityApi<AppUser>(); //Microsoft-ovi default endpointi (/login, /register, …) sada dobiju prefiks /api => POST /api/login
+
+app.MapHub<NotificationHub>("/hub/notifications");
 
 try
 {

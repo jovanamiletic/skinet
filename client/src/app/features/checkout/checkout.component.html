@@ -1,5 +1,6 @@
 <div class="flex mt-32 gap-6">
   <div class="w-3/4">
+    <!--  [linear]="true" -> ne možeš na sledeći step dok trenutni nije “completed” -->
     <mat-stepper
       (selectionChange)="onStepChange($event)"
       [linear]="true"

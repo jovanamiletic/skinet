@@ -5,6 +5,8 @@ import { ConfirmationToken } from '@stripe/stripe-js';
 import { AddressPipe } from '../../../shared/pipes/address-pipe';
 import { PaymentCardPipe } from '../../../shared/pipes/payment-card-pipe';
 
+//bez ikakve poslovne logike, samo čitanje iz korpe i prikaz
+
 @Component({
   selector: 'app-checkout-review',
   imports: [CurrencyPipe, AddressPipe, PaymentCardPipe],

@@ -33,7 +33,7 @@ export class CheckoutDeliveryComponent {
     })
   }
 
-  updateDeliveryMethod(dm: DeliveryMethod) {
+  updateDeliveryMethod(dm: DeliveryMethod) { 
     this.cartService.selectedDelivery.set(dm);
     const cart = this.cartService.cart();
     if (cart) {
