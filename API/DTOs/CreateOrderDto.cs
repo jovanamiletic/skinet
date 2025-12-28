@@ -17,4 +17,5 @@ public class CreateOrderDto
 
   [Required]
   public PaymentSummary PaymentSummary { get; set; } = null!; //info o kartici
+  public decimal Discount { get; set; }
 }

@@ -1,8 +1,6 @@
 using System;
 using API.Extensions;
 using API.SignalR;
-
-// using API.SignalR;
 using Core.Entities;
 using Core.Entities.OrderAggregate;
 using Core.Interfaces;
@@ -73,7 +71,7 @@ public class PaymentsController(IPaymentService paymentService,
   {
     try
     {
-      return EventUtility.ConstructEvent(json, Request.Headers["Stripe-Signature"], _whSecret, throwOnApiVersionMismatch: false);
+      return EventUtility.ConstructEvent(json, Request.Headers["Stripe-Signature"], _whSecret);
     }
     catch (Exception ex)
     {
@@ -86,23 +84,15 @@ public class PaymentsController(IPaymentService paymentService,
   {
     if (intent.Status == "succeeded")
     {
-
-      logger.LogInformation("Webhook PI id: {Id}", intent.Id);//ovo brisi
-
       var spec = new OrderSpecification(intent.Id, true);
 
       var order = await unit.Repository<Core.Entities.OrderAggregate.Order>().GetEntityWithSpec(spec)
                   ?? throw new Exception("Order not found");
 
-      if (order == null)
-      {
-        logger.LogWarning("Order NOT found for PI {Id}", intent.Id);
-        return; // <-- umesto throw
-      }
+      var orderTotalInCents = (long)Math.Round(order.GetTotal() * 100,
+      MidpointRounding.AwayFromZero);
 
-      order.Status = OrderStatus.PaymentReceived;
-
-      if ((long)order.GetTotal() * 100 != intent.Amount)
+      if (orderTotalInCents != intent.Amount)
       {
         order.Status = OrderStatus.PaymentMismatch;
       }

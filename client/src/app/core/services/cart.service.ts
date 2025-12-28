@@ -1,9 +1,9 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Cart, CartItem } from '../../shared/models/cart';
+import { Cart, CartItem, Coupon } from '../../shared/models/cart';
 import { Product } from '../../shared/models/product';
-import { map } from 'rxjs';
+import { map, firstValueFrom, tap } from 'rxjs';
 import { DeliveryMethod } from '../../shared/models/deliveryMethod';
 
 @Injectable({
@@ -19,20 +19,39 @@ export class CartService {
   });
   selectedDelivery = signal<DeliveryMethod | null>(null);
   
-  totals = computed(()=> { //azurira cenu u checkout-u
+  totals = computed(() => {
     const cart = this.cart();
     const delivery = this.selectedDelivery();
+
     if (!cart) return null;
     const subtotal = cart.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+    let discountValue = 0;
+
+    if (cart.coupon) {
+      console.log(cart)
+      if (cart.coupon.amountOff) {
+        discountValue = cart.coupon.amountOff;
+      } else if (cart.coupon.percentOff) {
+        discountValue = subtotal * (cart.coupon.percentOff / 100);
+      }
+    }
+
     const shipping = delivery ? delivery.price : 0;
-    const discount = 0;
+
+    const total = subtotal + shipping - discountValue
+
     return {
       subtotal,
       shipping,
-      discount: 0, 
-      total: subtotal + shipping - discount
+      discount: discountValue,
+      total
     };
-  });
+  })
+
+   applyDiscount(code: string) {
+    return this.http.get<Coupon>(this.baseUrl + 'coupons/' + code);
+  }
 
   getCart(id: string) {
     return this.http.get<Cart>(this.baseUrl + 'cart?id=' + id).pipe( //pipe omogucava da uradim nesto sa Observable obj i i dalje vratim Observable
@@ -46,21 +65,23 @@ export class CartService {
   }
 
   setCart(cart: Cart) {
-    return this.http.post<Cart>(this.baseUrl + 'cart', cart).subscribe({ // Angular salje POST /api/cart
-      next: cart => this.cart.set(cart) //cart je ovde odgovor sa servera(nije isti objekat koji sam poslala)
-    })
+     return this.http.post<Cart>(this.baseUrl + 'cart', cart).pipe(// Angular salje POST /api/cart
+      tap(cart => {
+        this.cart.set(cart)//cart je ovde odgovor sa servera(nije isti objekat koji sam poslala)
+      })
+    )
   }
 
-  addItemToCart(item: CartItem | Product, quantity = 1) {//quantity-koliko komada zelim da dodam
+  async addItemToCart(item: CartItem | Product, quantity = 1) {//quantity-koliko komada zelim da dodam
     const cart = this.cart() ?? this.createCart();
     if (this.isProduct(item)) {
       item = this.mapProductToCartItem(item);
     }
     cart.items = this.addOrUpdateItem(cart.items, item, quantity);
-    this.setCart(cart);
+    await firstValueFrom(this.setCart(cart));
   }
 
-  removeItemFromCart(productId: number, quantity = 1) {
+  async removeItemFromCart(productId: number, quantity = 1) {
     const cart = this.cart();
     if (!cart) return;
     const index = cart.items.findIndex(i => i.productId === productId);
@@ -73,7 +94,7 @@ export class CartService {
       if (cart.items.length === 0) {
         this.deleteCart();//brise element iz korpe u Redis-u
       } else {
-        this.setCart(cart);//azurira korpu u Redis-u
+        await firstValueFrom(this.setCart(cart));//azurira korpu u Redis-u(proveri)
       }
     }
   }
