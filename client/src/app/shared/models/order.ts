@@ -38,7 +38,7 @@ export interface Order {
     quantity: number
   }
   
-  export interface OrderToCreate {
+  export interface OrderToCreate { //match-uje se sa DTO-om koji je na back-u
     cartId: string;
     deliveryMethodId: number;
     shippingAddress: ShippingAddress;

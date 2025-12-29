@@ -1,8 +1,6 @@
 using System;
 using API.Extensions;
 using API.SignalR;
-
-// using API.SignalR;
 using Core.Entities;
 using Core.Entities.OrderAggregate;
 using Core.Interfaces;
@@ -11,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Stripe;
+using Order = Core.Entities.OrderAggregate.Order;
 
 namespace API.Controllers;
 
@@ -87,20 +86,20 @@ public class PaymentsController(IPaymentService paymentService,
     if (intent.Status == "succeeded")
     {
 
-      logger.LogInformation("Webhook PI id: {Id}", intent.Id);//ovo brisi
+      // logger.LogInformation("Webhook PI id: {Id}", intent.Id);//ovo brisi
 
       var spec = new OrderSpecification(intent.Id, true);
 
-      var order = await unit.Repository<Core.Entities.OrderAggregate.Order>().GetEntityWithSpec(spec)
+      var order = await unit.Repository<Order>().GetEntityWithSpec(spec)
                   ?? throw new Exception("Order not found");
 
-      if (order == null)
-      {
-        logger.LogWarning("Order NOT found for PI {Id}", intent.Id);
-        return; // <-- umesto throw
-      }
+      // if (order == null)
+      // {
+      //   logger.LogWarning("Order NOT found for PI {Id}", intent.Id);
+      //   return; // <-- umesto throw
+      // }
 
-      order.Status = OrderStatus.PaymentReceived;
+      // order.Status = OrderStatus.PaymentReceived;
 
       if ((long)order.GetTotal() * 100 != intent.Amount)
       {
@@ -117,8 +116,7 @@ public class PaymentsController(IPaymentService paymentService,
 
       if (!string.IsNullOrEmpty(connectionId))
       {
-        await hubContext.Clients.Client(connectionId).SendAsync("OrderCompleteNotification",
-            order.ToDto());
+        await hubContext.Clients.Client(connectionId).SendAsync("OrderCompleteNotification", order.ToDto());
       }
     }
   }
