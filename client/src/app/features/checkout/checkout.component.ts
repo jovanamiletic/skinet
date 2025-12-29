@@ -144,7 +144,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     }
   }
 
-    private async createOrderModel(): Promise<OrderToCreate> {
+  private async createOrderModel(): Promise<OrderToCreate> {
     const cart = this.cartService.cart();
     const shippingAddress = await this.getAddressFromStripeAddress() as ShippingAddress;
     const card = this.confirmationToken?.payment_method_preview.card;
