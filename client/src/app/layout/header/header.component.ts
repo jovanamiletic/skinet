@@ -9,6 +9,7 @@ import { AccountService } from '../../core/services/account.service';
 import { MatDivider } from '@angular/material/divider';
 import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
 import { Component, inject } from "@angular/core";
+import { IsAdmin } from '../../shared/directives/is-admin';
 
 @Component({
   selector: 'app-header',
@@ -22,7 +23,8 @@ import { Component, inject } from "@angular/core";
     MatMenuTrigger,
     MatMenu,
     MatDivider,
-    MatMenuItem
+    MatMenuItem,
+    IsAdmin 
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'

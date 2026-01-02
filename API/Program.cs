@@ -6,6 +6,7 @@ using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 using API.SignalR;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,7 +37,7 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(config =>
 builder.Services.AddSingleton<ICartService, CartService>();
 
 builder.Services.AddAuthorization();
-builder.Services.AddIdentityApiEndpoints<AppUser>()
+builder.Services.AddIdentityApiEndpoints<AppUser>().AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<StoreContext>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddSignalR();
@@ -61,8 +62,9 @@ try
   using var scope = app.Services.CreateScope(); // using garantuje da će se scope (i DbContext) pravilno dispose-ovati
   var services = scope.ServiceProvider;
   var context = services.GetRequiredService<StoreContext>(); // DI pravi instancu StoreContext
+  var userManager = services.GetRequiredService<UserManager<AppUser>>();
   await context.Database.MigrateAsync(); // da li baza postoji -> ako ne, kreira je; proverava koje migracije su vec primenjene, a onda primenjuje sve one koje fale
-  await StoreContextSeed.SeedAsync(context);
+  await StoreContextSeed.SeedAsync(context, userManager);
 }
 catch (Exception ex)
 {

@@ -15,6 +15,8 @@ import { CheckoutSuccessComponent } from './features/checkout/checkout-success/c
 import { OrderComponent } from './features/orders/order/order.component';
 import { OrderDetailedComponent } from './features/orders/order-detailed/order-detailed.component';
 import { orderCompleteGuard } from './core/guards/order-complete-guard';
+import { adminGuard } from './core/guards/admin-guard';
+import { AdminComponent } from './features/admin/admin.component';
 
 export const routes: Routes = [
   {path: '', component: HomeComponent}, // /
@@ -30,6 +32,7 @@ export const routes: Routes = [
   {path: 'test-error', component: TestErrorComponent},// /test-error DEBUG-ONLY ruta(ne ide u produkciju)
   {path:'not-found', component:NotFoundComponent},// /not-found
   {path:'server-error', component: ServerErrorComponent},// /server-error
+  {path: 'admin', component: AdminComponent, canActivate: [authGuard, adminGuard]},
   {path: '**', redirectTo: 'not-found', pathMatch: 'full'},// WILDCARD ruta (bilo koja ruta koja nije navedena gore bice preusmerena na not-found)
 ];
  
