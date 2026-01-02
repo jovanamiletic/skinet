@@ -18,9 +18,8 @@ import { AdminService } from '../../../core/services/admin.service';
     MatButton,
     AddressPipe,
     PaymentCardPipe,
-    CurrencyPipe,
-    RouterLink
-  ],
+    CurrencyPipe 
+   ],
   templateUrl: './order-detailed.component.html',
   styleUrl: './order-detailed.component.scss'
 })
